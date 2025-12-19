@@ -11,8 +11,12 @@ public class Monster : MonoBehaviour
     private Renderer monsterRenderer;
     private Color originalColor;
     private Animator _anim;
-    private Collider _collider; // 중복 클릭 방지용
-    private bool isDead = false; // 사망 상태 체크
+    private Collider _collider;
+    private bool isDead = false;
+
+    // 사운드 이름 변수
+    private string hitSoundName;
+    private string dieSoundName;
 
     void Start()
     {
@@ -30,20 +34,35 @@ public class Monster : MonoBehaviour
         {
             Debug.LogError("Monster 스크립트: Animator를 찾을 수 없습니다!");
         }
+
+        if (gameObject.CompareTag("Slime"))
+        {
+            // 태그가 Slime인 경우
+            hitSoundName = "Slime_Hit";
+            dieSoundName = "Slime_Die";
+        }
+        else if (gameObject.CompareTag("Monster"))
+        {
+            // 태그가 Monster인 경우
+            hitSoundName = "Monster_Hit";
+            dieSoundName = "Monster_Die";
+        }
+        else
+        {
+            hitSoundName = "Monster_Hit";
+            dieSoundName = "Monster_Die";
+        }
     }
 
     public void OnClick(int damage)
     {
-        if (isDead) return; // 이미 죽었다면 무시
+        if (isDead) return;
 
         currentHp -= damage;
 
-        // 체력이 0 이하인지 먼저 확인하여 로직을 분리합니다.
         if (currentHp <= 0)
         {
             StopCoroutine("HitAnimation");
-
-            // 바로 사망 처리
             StartCoroutine(DieAnimation());
         }
         else
@@ -59,6 +78,9 @@ public class Monster : MonoBehaviour
         {
             isDead = true;
             _collider.enabled = false;
+
+            // 설정된 사망 사운드 재생
+            SoundManager.instance.PlaySound(dieSoundName);
 
             GameManager.Instance.AddGold(goldReward);
 
@@ -80,7 +102,13 @@ public class Monster : MonoBehaviour
         if (monsterRenderer != null && _anim != null)
         {
             _anim.SetTrigger("Hit");
-            EffectManager.Instance.PlayEffect("Hit", this.transform.position, Quaternion.identity);
+
+            // 설정된 피격 사운드 재생
+            SoundManager.instance.PlaySound(hitSoundName);
+
+            // 이펙트 재생
+            if (EffectManager.Instance != null)
+                EffectManager.Instance.PlayEffect("Hit", this.transform.position, Quaternion.identity);
 
             monsterRenderer.material.color = Color.red;
             yield return new WaitForSeconds(0.1f);

@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         UpdateUI();
+
+        SoundManager.instance.PlaySound("BGM");
     }
 
     public void AddGold(int amount)

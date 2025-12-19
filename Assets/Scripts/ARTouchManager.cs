@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 public class ARTouchManager : MonoBehaviour
 {
-    public Camera arCamera; // Inspector에서 AR Camera 연결
+    public Camera arCamera;
     public int clickDamage = 10;
 
     void Update()
@@ -16,7 +16,6 @@ public class ARTouchManager : MonoBehaviour
 
             Vector2 touchPos;
 
-            // 모바일 터치 좌표 vs 에디터 마우스 좌표 분기 처리
 #if UNITY_EDITOR
             touchPos = Input.mousePosition;
 #else
@@ -29,10 +28,7 @@ public class ARTouchManager : MonoBehaviour
 
     bool IsPointerOverUI()
     {
-        // PC(에디터) 확인용
         if (EventSystem.current.IsPointerOverGameObject()) return true;
-
-        // 모바일 터치 확인용
         if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) return true;
 
         return false;
@@ -43,17 +39,12 @@ public class ARTouchManager : MonoBehaviour
         Ray ray = arCamera.ScreenPointToRay(screenPos);
         RaycastHit hit;
 
-        // 레이저 발사!
         if (Physics.Raycast(ray, out hit))
         {
-            // 맞은 녀석이 몬스터라면?
             Monster monster = hit.collider.GetComponent<Monster>();
             if (monster != null)
             {
                 monster.OnClick(clickDamage);
-
-                // (선택) 여기에 터치 이펙트 생성 코드 추가 가능
-                // Instantiate(touchEffect, hit.point, Quaternion.identity);
             }
         }
     }
