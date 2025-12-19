@@ -5,73 +5,86 @@ public class Monster : MonoBehaviour
 {
     [Header("Settings")]
     public int maxHp = 100;
-    public int goldReward = 50; // 잡으면 주는 돈
+    public int goldReward = 50;
 
     private int currentHp;
-    private Renderer monsterRenderer; // 몬스터의 렌더러 컴포넌트
-    private Color originalColor;      // 원래 색상을 저장할 변수
+    private Renderer monsterRenderer;
+    private Color originalColor;
+    private Animator _anim;
+    private Collider _collider; // 중복 클릭 방지용
+    private bool isDead = false; // 사망 상태 체크
 
     void Start()
     {
         currentHp = maxHp;
-        monsterRenderer = GetComponent<Renderer>();
-        if (monsterRenderer == null)
-        {
-            monsterRenderer = GetComponentInChildren<Renderer>();
-        }
+        _collider = GetComponent<Collider>();
+        _anim = GetComponent<Animator>();
+        monsterRenderer = GetComponentInChildren<Renderer>();
 
         if (monsterRenderer != null)
         {
-            originalColor = monsterRenderer.material.color; // 원래 색상 저장
+            originalColor = monsterRenderer.material.color;
         }
-        else
+
+        if (_anim == null)
         {
-            Debug.LogWarning("Monster 스크립트: Renderer 컴포넌트를 찾을 수 없습니다. 색상 변경이 동작하지 않습니다.");
+            Debug.LogError("Monster 스크립트: Animator를 찾을 수 없습니다!");
         }
     }
 
-    // 터치 매니저에서 호출할 함수
     public void OnClick(int damage)
     {
+        if (isDead) return; // 이미 죽었다면 무시
+
         currentHp -= damage;
 
-        // 타격감 연출 (색상 변경)
-        StopAllCoroutines(); // 기존 코루틴 중단 (이전 색상 변경 중이라면)
-        StartCoroutine(HitAnimation());
-
-        // 체력이 다 달면 사망
+        // 체력이 0 이하인지 먼저 확인하여 로직을 분리합니다.
         if (currentHp <= 0)
         {
-            Die();
-        }
-    }
+            StopCoroutine("HitAnimation");
 
-    void Die()
-    {
-        GameManager.Instance.AddGold(goldReward);
-
-        // 몬스터가 죽을 때 원래 색상으로 되돌리기 (선택 사항)
-        if (monsterRenderer != null)
-        {
-            monsterRenderer.material.color = originalColor;
-        }
-
-        // 펑 터지는 이펙트가 있다면 여기서 Instantiate(effectPrefab, ...);
-        Destroy(gameObject); // 몬스터 삭제
-    }
-
-    // 색상 변경 애니메이션 코루틴
-    IEnumerator HitAnimation()
-    {
-        if (monsterRenderer != null)
-        {
-            monsterRenderer.material.color = Color.red; // 빨간색으로 변경
-            yield return new WaitForSeconds(0.1f);      // 0.1초 대기
-            monsterRenderer.material.color = originalColor; // 원래 색상으로 복귀
+            // 바로 사망 처리
+            StartCoroutine(DieAnimation());
         }
         else
         {
-            yield return null; // 렌더러가 없으면 아무것도 안 함
+            StopCoroutine("HitAnimation");
+            StartCoroutine(HitAnimation());
+        }
+    }
+
+    IEnumerator DieAnimation()
+    {
+        if (monsterRenderer != null && _anim != null)
+        {
+            isDead = true;
+            _collider.enabled = false;
+
+            GameManager.Instance.AddGold(goldReward);
+
+            if (monsterRenderer != null)
+            {
+                monsterRenderer.material.color = originalColor;
+            }
+
+            if (isDead)
+                _anim.SetTrigger("Die");
+
+            yield return new WaitForSeconds(2f);
+            Destroy(gameObject);
+        }
+    }
+
+    IEnumerator HitAnimation()
+    {
+        if (monsterRenderer != null && _anim != null)
+        {
+            _anim.SetTrigger("Hit");
+            EffectManager.Instance.PlayEffect("Hit", this.transform.position, Quaternion.identity);
+
+            monsterRenderer.material.color = Color.red;
+            yield return new WaitForSeconds(0.1f);
+            monsterRenderer.material.color = originalColor;
         }
     }
 }
