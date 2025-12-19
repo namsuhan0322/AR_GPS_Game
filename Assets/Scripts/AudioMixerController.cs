@@ -14,13 +14,22 @@ public class AudioMixerController : MonoBehaviour
 
     private void Awake()
     {
-        musicMasterSlider.value = PlayerPrefs.GetFloat("Volume_Master", 1f);
-        musicBGMSlider.value = PlayerPrefs.GetFloat("Volume_BGM", 1f);
-        musicSFXSlider.value = PlayerPrefs.GetFloat("Volume_SFX", 1f);
+        float masterVol = PlayerPrefs.GetFloat("Volume_Master", 1f);
+        float bgmVol = PlayerPrefs.GetFloat("Volume_BGM", 1f);
+        float sfxVol = PlayerPrefs.GetFloat("Volume_SFX", 1f);
+
+        // 슬라이더 UI에 값 적용
+        musicMasterSlider.value = masterVol;
+        musicBGMSlider.value = bgmVol;
+        musicSFXSlider.value = sfxVol;
 
         musicMasterSlider.onValueChanged.AddListener(SetMasterVolume);
         musicBGMSlider.onValueChanged.AddListener(SetBGMVolume);
         musicSFXSlider.onValueChanged.AddListener(SetSFXVolume);
+
+        SetMasterVolume(masterVol);
+        SetBGMVolume(bgmVol);
+        SetSFXVolume(sfxVol);
     }
 
     public void SetMasterVolume(float volume)                           // 마스터 볼륨 슬라이더가 Mixer에 반영되게

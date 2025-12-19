@@ -1,5 +1,6 @@
 using UnityEngine;
-using UnityEngine.XR.ARFoundation; // AR 관련 네임스페이스
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.EventSystems;
 
 public class ARTouchManager : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class ARTouchManager : MonoBehaviour
         // 터치 또는 마우스 클릭 감지
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began || Input.GetMouseButtonDown(0))
         {
+            if (IsPointerOverUI()) return;
+
             Vector2 touchPos;
 
             // 모바일 터치 좌표 vs 에디터 마우스 좌표 분기 처리
@@ -22,6 +25,17 @@ public class ARTouchManager : MonoBehaviour
 #endif
             ShootRay(touchPos);
         }
+    }
+
+    bool IsPointerOverUI()
+    {
+        // PC(에디터) 확인용
+        if (EventSystem.current.IsPointerOverGameObject()) return true;
+
+        // 모바일 터치 확인용
+        if (Input.touchCount > 0 && EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)) return true;
+
+        return false;
     }
 
     void ShootRay(Vector2 screenPos)
