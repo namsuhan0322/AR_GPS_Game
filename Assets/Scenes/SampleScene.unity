@@ -206,13 +206,25 @@ MonoBehaviour:
   m_FillRect: {fileID: 2114291839}
   m_HandleRect: {fileID: 1961453736}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.0001
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 877720210}
+        m_TargetAssemblyTypeName: AudioMixerController, Assembly-CSharp
+        m_MethodName: SetMasterVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &142646312
 GameObject:
   m_ObjectHideFlags: 0
@@ -1446,7 +1458,6 @@ GameObject:
   m_Component:
   - component: {fileID: 615319630}
   - component: {fileID: 615319629}
-  - component: {fileID: 615319628}
   - component: {fileID: 615319631}
   m_Layer: 6
   m_Name: MapCamera
@@ -1455,14 +1466,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &615319628
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 615319627}
-  m_Enabled: 1
 --- !u!20 &615319629
 Camera:
   m_ObjectHideFlags: 0
@@ -2571,7 +2574,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc591d6eca5c70a499173e45da39435b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sounds: []
+  sounds:
+  - name: BGM
+    clip: {fileID: 8300000, guid: e023710e315d35b4b9690b5b53cd9e65, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    mixerGroup: {fileID: -2254371528127052365, guid: b523f6d130c74cb43b8534463e0a276e, type: 2}
+    source: {fileID: 0}
+  - name: Slime_Hit
+    clip: {fileID: 8300000, guid: b1c13c30713848e46936a9045f48daa7, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    mixerGroup: {fileID: 5861360908231580434, guid: b523f6d130c74cb43b8534463e0a276e, type: 2}
+    source: {fileID: 0}
+  - name: Slime_Die
+    clip: {fileID: 8300000, guid: 3ab8a75d887101c47a82dbe09a89bca8, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    mixerGroup: {fileID: 5861360908231580434, guid: b523f6d130c74cb43b8534463e0a276e, type: 2}
+    source: {fileID: 0}
+  - name: Monster_Hit
+    clip: {fileID: 8300000, guid: d0fc91193fb463e4c954f37f087e293e, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    mixerGroup: {fileID: 5861360908231580434, guid: b523f6d130c74cb43b8534463e0a276e, type: 2}
+    source: {fileID: 0}
+  - name: Monster_Die
+    clip: {fileID: 8300000, guid: 672ae602b1a725b419b41817a2b1c3a8, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    mixerGroup: {fileID: 5861360908231580434, guid: b523f6d130c74cb43b8534463e0a276e, type: 2}
+    source: {fileID: 0}
   audioMixer: {fileID: 24100000, guid: b523f6d130c74cb43b8534463e0a276e, type: 2}
 --- !u!1 &1153046909
 GameObject:
@@ -4333,7 +4371,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1731359661}
   - component: {fileID: 1731359662}
-  - component: {fileID: 1731359663}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -4369,19 +4406,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goldText: {fileID: 572171141}
---- !u!114 &1731359663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1731359660}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 359028ef2e2d7a64a8bb0c6231eeba7a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debugText: {fileID: 0}
 --- !u!1 &1764519449
 GameObject:
   m_ObjectHideFlags: 0
@@ -4621,13 +4645,25 @@ MonoBehaviour:
   m_FillRect: {fileID: 1481056907}
   m_HandleRect: {fileID: 648859202}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.0001
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 877720210}
+        m_TargetAssemblyTypeName: AudioMixerController, Assembly-CSharp
+        m_MethodName: SetBGMVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1961453735
 GameObject:
   m_ObjectHideFlags: 0
@@ -5218,13 +5254,25 @@ MonoBehaviour:
   m_FillRect: {fileID: 1244812676}
   m_HandleRect: {fileID: 822548997}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.0001
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 877720210}
+        m_TargetAssemblyTypeName: AudioMixerController, Assembly-CSharp
+        m_MethodName: SetSFXVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &7493520066660483249
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5287,14 +5335,30 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8810848263118845581, guid: 69d262fa4c54e1741a1a4845a5598cf6, type: 3}
       propertyPath: effects.Array.data[1]._name
-      value: Die
+      value: Touch
       objectReference: {fileID: 0}
+    - target: {fileID: 8810848263118845581, guid: 69d262fa4c54e1741a1a4845a5598cf6, type: 3}
+      propertyPath: effects.Array.data[2]._name
+      value: Touch
+      objectReference: {fileID: 0}
+    - target: {fileID: 8810848263118845581, guid: 69d262fa4c54e1741a1a4845a5598cf6, type: 3}
+      propertyPath: effects.Array.data[0]._effectPrefab
+      value: 
+      objectReference: {fileID: 4021103657954561961, guid: d01957ebd9d16ef4bb37fa8cc14dd49b, type: 3}
+    - target: {fileID: 8810848263118845581, guid: 69d262fa4c54e1741a1a4845a5598cf6, type: 3}
+      propertyPath: effects.Array.data[1]._effectPrefab
+      value: 
+      objectReference: {fileID: 5112403345868107898, guid: 8b19812af4dac5443af6026ae030a723, type: 3}
     - target: {fileID: 8810848263118845581, guid: 69d262fa4c54e1741a1a4845a5598cf6, type: 3}
       propertyPath: effects.Array.data[0]._initialPoolSize
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8810848263118845581, guid: 69d262fa4c54e1741a1a4845a5598cf6, type: 3}
       propertyPath: effects.Array.data[1]._initialPoolSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8810848263118845581, guid: 69d262fa4c54e1741a1a4845a5598cf6, type: 3}
+      propertyPath: effects.Array.data[2]._initialPoolSize
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
@@ -18,7 +16,6 @@ public class AudioMixerController : MonoBehaviour
         float bgmVol = PlayerPrefs.GetFloat("Volume_BGM", 1f);
         float sfxVol = PlayerPrefs.GetFloat("Volume_SFX", 1f);
 
-        // 슬라이더 UI에 값 적용
         musicMasterSlider.value = masterVol;
         musicBGMSlider.value = bgmVol;
         musicSFXSlider.value = sfxVol;
@@ -32,21 +29,26 @@ public class AudioMixerController : MonoBehaviour
         SetSFXVolume(sfxVol);
     }
 
-    public void SetMasterVolume(float volume)                           // 마스터 볼륨 슬라이더가 Mixer에 반영되게
+    private float GetDecibel(float volume)
     {
-        audioMixer.SetFloat("Master", Mathf.Log10(volume) * 20);        // 볼륨은 Log10 단위에 x20을 해준다.
+        return Mathf.Log10(Mathf.Max(0.0001f, volume)) * 20;
+    }
+
+    public void SetMasterVolume(float volume)
+    {
+        audioMixer.SetFloat("Master", GetDecibel(volume));
         PlayerPrefs.SetFloat("Volume_Master", volume);
     }
 
-    public void SetBGMVolume(float volume)                              // BGM 볼륨 슬라이더가 Mixer에 반영되게
+    public void SetBGMVolume(float volume)
     {
-        audioMixer.SetFloat("BGM", Mathf.Log10(volume) * 20);
+        audioMixer.SetFloat("BGM", GetDecibel(volume));
         PlayerPrefs.SetFloat("Volume_BGM", volume);
     }
 
-    public void SetSFXVolume(float volume)                              // SFX 볼륨 슬라이더가 Mixer에 반영되게
+    public void SetSFXVolume(float volume)
     {
-        audioMixer.SetFloat("SFX", Mathf.Log10(volume) * 20);
+        audioMixer.SetFloat("SFX", GetDecibel(volume));
         PlayerPrefs.SetFloat("Volume_SFX", volume);
     }
 }
